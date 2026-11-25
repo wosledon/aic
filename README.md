@@ -5,6 +5,7 @@
 > Enterprise LLM gateway demo: one endpoint for every coding agent, with per-project token analytics, approval governance, and zero provider keys on the client.
 
 [![GitHub stars](https://img.shields.io/github/stars/wosledon/aic?style=flat-square&logo=github)](https://github.com/wosledon/aic/stargazers)
+[![Visitors](https://api.visitorbadge.io/api/visitors?path=wosledon%2Faic&label=Visitors&countColor=%234f6ef7)](https://github.com/wosledon/aic)
 [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-4f6ef7?style=flat-square&logo=githubpages)](https://wosledon.github.io/aic/)
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev/)

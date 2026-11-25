@@ -264,6 +264,8 @@
 
     footer { margin-top: 64px; border-top: 1px solid var(--line); padding: 30px 0 42px; }
     .foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; }
+    .foot-left { display: grid; gap: 10px; justify-items: start; }
+    .visitor img { height: 20px; width: auto; }
     .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
     .foot a:hover { color: var(--text); }
 
@@ -497,7 +499,12 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
 
   <footer>
     <div class="wrap foot">
-      <div>© 2026 AIControl · <span data-i18n="footer.tag">Enterprise LLM gateway demo</span></div>
+      <div class="foot-left">
+        <div>© 2026 AIControl · <span data-i18n="footer.tag">Enterprise LLM gateway demo</span></div>
+        <a class="visitor" href="https://github.com/wosledon/aic" aria-label="Visitor counter">
+          <img src="https://api.visitorbadge.io/api/visitors?path=wosledon%2Faic&label=Visitors&countColor=%234f6ef7" alt="Visitors" height="20" loading="lazy" />
+        </a>
+      </div>
       <div class="foot-links">
         <a href="https://github.com/wosledon/aic" data-i18n="footer.repo">GitHub</a>
         <a href="https://github.com/wosledon/aic/blob/main/README.md" data-i18n="footer.readme">README (EN)</a>

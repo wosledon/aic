@@ -5,6 +5,7 @@
 > 企业级大模型网关 Demo：为所有编码 Agent 提供统一出口，按项目归因 Token、治理工具审批，客户端不持有任何上游密钥。
 
 [![GitHub stars](https://img.shields.io/github/stars/wosledon/aic?style=flat-square&logo=github)](https://github.com/wosledon/aic/stargazers)
+[![访问量](https://api.visitorbadge.io/api/visitors?path=wosledon%2Faic&label=%E8%AE%BF%E9%97%AE&countColor=%234f6ef7)](https://github.com/wosledon/aic)
 [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-4f6ef7?style=flat-square&logo=githubpages)](https://wosledon.github.io/aic/?lang=zh)
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?style=flat-square&logo=dotnet)](https://dotnet.microsoft.com/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev/)
