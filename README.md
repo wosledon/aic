@@ -148,18 +148,18 @@ aic doctor
 
 ## 主要环境变量
 
-| 变量                            | 说明                                         |
-| ------------------------------- | -------------------------------------------- |
-| `AIC_PUBLIC_BASE_URL`           | 网关对外地址（默认 `http://localhost:5080`） |
-| `AIC_DB_CONNECTION`             | SQLite 连接串或数据库路径                    |
+| 变量                            | 说明                                                           |
+| ------------------------------- | -------------------------------------------------------------- |
+| `AIC_PUBLIC_BASE_URL`           | 网关对外地址（默认 `http://localhost:5080`）                   |
+| `AIC_DB_CONNECTION`             | SQLite 连接串或数据库路径                                      |
 | `AIC_DEV_LOGIN_ENABLED`         | 是否启用演示登录（默认 `false`，仅 Development 配置为 `true`） |
-| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | 首个管理员 union_id                          |
-| `AIC_ENCRYPTION_KEY`            | 渠道密钥加密密钥（生产必须更换）             |
-| `AIC_TOKEN_SIGNING_KEY`         | 网关 JWT 签名密钥（生产必须更换）            |
-| `MODELS_DEV_API_URL`            | models.dev 数据源地址                        |
-| `AIC_SEED_DEMO`                 | 是否初始化演示数据                           |
-| `AIC_HOME`                      | 插件本地配置目录（默认 `~/.aic`）            |
-| `AIC_GATEWAY_URL`               | 插件覆盖网关地址                             |
+| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | 首个管理员 union_id                                            |
+| `AIC_ENCRYPTION_KEY`            | 渠道密钥加密密钥（生产必须更换）                               |
+| `AIC_TOKEN_SIGNING_KEY`         | 网关 JWT 签名密钥（生产必须更换）                              |
+| `MODELS_DEV_API_URL`            | models.dev 数据源地址                                          |
+| `AIC_SEED_DEMO`                 | 是否初始化演示数据                                             |
+| `AIC_HOME`                      | 插件本地配置目录（默认 `~/.aic`）                              |
+| `AIC_GATEWAY_URL`               | 插件覆盖网关地址                                               |
 
 ---
 
@@ -222,15 +222,15 @@ npm run build
 
 以下文件/目录默认不进入版本库（见 `.gitignore`）：
 
-| 路径/模式                                                                                       | 内容                                              |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| `.env`、`.env.*`（`.env.example` 除外）                                                          | 环境变量与密钥                                    |
-| `appsettings.Development.json`、`appsettings.*.Local.json`、`appsettings.Production.json`         | 本地/生产配置与密钥                               |
-| `*.db`、`*.db-shm`、`*.db-wal`、`*.sqlite*`                                                      | SQLite 数据库（含加密后的渠道密钥、飞书 Secret）  |
-| `.aic/`、`**/.aic/`                                                                              | 插件设备码与令牌缓存                              |
-| `*.pfx`、`*.pem`、`*.key`、`*.crt`、`certs/`                                                     | 证书与私钥                                        |
-| `.backup/`、`.smoke-*`、`.verify-screens/`、`logs/`                                               | 本地备份、验证产物与日志                          |
-| `**/bin`、`**/obj`、`src/AIControl.Server/wwwroot`、`**/dist`                                     | 构建产物                                          |
+| 路径/模式                                                                                 | 内容                                             |
+| ----------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| `.env`、`.env.*`（`.env.example` 除外）                                                   | 环境变量与密钥                                   |
+| `appsettings.Development.json`、`appsettings.*.Local.json`、`appsettings.Production.json` | 本地/生产配置与密钥                              |
+| `*.db`、`*.db-shm`、`*.db-wal`、`*.sqlite*`                                               | SQLite 数据库（含加密后的渠道密钥、飞书 Secret） |
+| `.aic/`、`**/.aic/`                                                                       | 插件设备码与令牌缓存                             |
+| `*.pfx`、`*.pem`、`*.key`、`*.crt`、`certs/`                                              | 证书与私钥                                       |
+| `.backup/`、`.smoke-*`、`.verify-screens/`、`logs/`                                       | 本地备份、验证产物与日志                         |
+| `**/bin`、`**/obj`、`src/AIControl.Server/wwwroot`、`**/dist`                             | 构建产物                                         |
 
 实践建议：
 

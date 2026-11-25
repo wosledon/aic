@@ -227,15 +227,17 @@ export default async function activate(pi: PiLike): Promise<void> {
     turnIndex = 0;
     startedAt = new Date().toISOString();
     restoreProject(ctx);
+    const resolved = resolveProject(ctx?.cwd ?? process.cwd());
     await ensureBootstrap();
     recordSessionStarted({
       sessionId,
       client: 'pi',
       projectKey,
-      projectName: bootstrap?.projects.find((project) => project.key === projectKey)?.name ?? null,
-      repoHash: resolveProject(ctx?.cwd ?? process.cwd()).repo_hash,
-      repoDisplay: resolveProject(ctx?.cwd ?? process.cwd()).repo_display,
-      cwdBasename: ctx?.cwd ? String(ctx.cwd).split(/[\\/]/).pop() : undefined,
+      projectName:
+        bootstrap?.projects.find((project) => project.key === projectKey)?.name ?? resolved.cwd_basename ?? null,
+      repoHash: resolved.repo_hash,
+      repoDisplay: resolved.repo_display,
+      cwdBasename: resolved.cwd_basename,
       model: currentModel ?? undefined,
     });
   });

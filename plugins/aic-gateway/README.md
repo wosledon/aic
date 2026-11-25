@@ -55,7 +55,9 @@ aic launch <codex|claude|copilot> [args...]
 2. 当前目录 `.pi/aic.json` 的 `projectKey`（`aic project set <key>` 默认写入这里）；
 3. 全局 `aic project set <key> --global`；
 4. Git `remote.origin.url` 规范化后与服务端仓库映射匹配；
-5. 未归因。
+5. Git `remote.origin.url` 的仓库名（首次上报，服务端自动建档并记录仓库映射）；
+6. 当前工作目录名（非 Git 目录的兜底）；
+7. 未归因（仅根目录、用户主目录等通用目录）。
 
 仓库 URL 会先去凭证、统一协议与大小写、去掉 `.git`，再计算 SHA-256；不会上传完整 remote URL。
 

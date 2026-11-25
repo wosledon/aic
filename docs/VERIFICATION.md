@@ -133,3 +133,32 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 | 结论                                                   | 应用建在个人版（豆包）租户下；个人版租户不支持企业自建应用的 tenant/user token 与 OAuth 授权 |
 
 处理方式：改用真实企业飞书租户的管理员账号在 open.feishu.cn/app 新建「企业自建应用」，回填 App ID / App Secret，再按「权限管理 → API 权限 → 获取用户身份标识」开通并发布版本。代码侧已将 21001 映射为明确提示，并在登录页/README 同步说明。
+
+## 项目归因修复（2026-11-25 23:34）
+
+现象：Pi 的真实请求进入「未归因」（48 次 / 37.9 万 Token），项目页只有演示项目。
+
+根因：插件 `resolveProject` 只在服务端已有仓库映射时返回项目 key；`github.com/wosledon/aic` 首次上报前没有映射，因此所有请求都不带 `X-AIC-Project`。
+
+修复：
+
+- 仓库有 remote 但无映射时，用仓库名作为 key（`aic`），并上报 repo hash / display，服务端记录映射；
+- 非 Git 目录回退到目录名；
+- 用户主目录等通用目录仍保持未归因。
+
+验证：
+
+| 检查                              | 结果                                                             |
+| --------------------------------- | ---------------------------------------------------------------- |
+| `npm run test:project`            | 5 个场景通过（cwd / explicit / project_config / repo / generic） |
+| 真实网关请求 `X-AIC-Project: aic` | HTTP 200，Step 3.7 Flash                                         |
+| 项目接口                          | 新增 `aic`（1 位成员），项目页显示 1 次请求 / 21 Token           |
+
+历史未归因数据不会重新分摊；重启 Pi 后新会话即按新规则上报。
+
+## 敏感文件忽略检查（2026-11-25 23:32）
+
+- `git ls-files` 中无 `*.db`、`appsettings.Development.json`、`wwwroot/`、`.verify-screens/`；
+- `git check-ignore -v` 命中 `.gitignore` 对应规则；
+- `appsettings.json` 已移除演示加密 / JWT 密钥，Development 密钥放入被忽略的 `appsettings.Development.json`；
+- 非 Development 环境缺少 `AIC_ENCRYPTION_KEY` / `AIC_TOKEN_SIGNING_KEY` 时启动失败。

@@ -64,6 +64,42 @@ export function readProjectConfig(cwd: string): string | null {
   return null;
 }
 
+/**
+ * 仅用于兜底的项目 key 归一化，规则与服务端 ProjectRegistry.NormalizeKey 一致。
+ */
+export function slugifyProjectKey(value: string): string | null {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9._-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 128)
+    .replace(/^[-._]+|[-._]+$/g, '');
+  return slug || null;
+}
+
+/** 目录名过于通用或就是用户主目录时，不当作项目名。 */
+const genericDirectoryNames = new Set([
+  'users',
+  'administrator',
+  'home',
+  'root',
+  'tmp',
+  'temp',
+  'desktop',
+  'downloads',
+  'documents',
+  'windows',
+  'system32',
+]);
+
+/** 从 git remote 的 host/org/repo 中取仓库名作为项目 key。 */
+export function projectKeyFromRepo(display: string): string | null {
+  const parts = display.split('/').filter(Boolean);
+  const repo = parts[parts.length - 1];
+  return repo ? slugifyProjectKey(repo) : null;
+}
+
 export function resolveProject(cwd = process.cwd()): ResolvedProject {
   const config = loadConfig();
   const repo = readGitRemote(cwd);
@@ -103,6 +139,31 @@ export function resolveProject(cwd = process.cwd()): ResolvedProject {
         cwd_basename: path.basename(cwd),
       };
     }
+
+    // 首次上报：还没有服务端映射时，用仓库名自动建档，避免请求变成未归因。
+    const repoKey = projectKeyFromRepo(normalized.display);
+    if (repoKey) {
+      return {
+        key: repoKey,
+        source: 'repo',
+        repo_hash: normalized.hash,
+        repo_display: normalized.display,
+        cwd_basename: path.basename(cwd),
+      };
+    }
+  }
+
+  // 非 Git 目录（例如临时工作区）用目录名兜底，保证项目能自动上报。
+  const cwdBasename = path.basename(cwd);
+  const cwdKey = slugifyProjectKey(cwdBasename);
+  if (cwdKey && !genericDirectoryNames.has(cwdKey)) {
+    return {
+      key: cwdKey,
+      source: 'cwd',
+      repo_hash: normalized?.hash,
+      repo_display: normalized?.display,
+      cwd_basename: cwdBasename,
+    };
   }
 
   return {
@@ -110,6 +171,6 @@ export function resolveProject(cwd = process.cwd()): ResolvedProject {
     source: 'unattributed',
     repo_hash: normalized?.hash,
     repo_display: normalized?.display,
-    cwd_basename: path.basename(cwd),
+    cwd_basename: cwdBasename,
   };
 }

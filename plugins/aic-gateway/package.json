@@ -22,7 +22,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "test:project": "node scripts/project-smoke.mjs"
   },
   "engines": {
     "node": ">=20"

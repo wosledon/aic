@@ -271,7 +271,7 @@ export function ProjectsPage() {
               归因自动完成
             </Typography>
             <Stack spacing={1.1} sx={{ mt: 1.5 }}>
-              {['插件读取 Git remote 并做规范化', '上报项目 key、项目名与仓库', '平台自动建档并记录参与成员'].map((text, index) => (
+              {['读取 Git remote（无 remote 时用目录名）', '上报项目 key、项目名与仓库', '平台自动建档并记录参与成员'].map((text, index) => (
                 <Stack key={text} direction="row" spacing={1.1} alignItems="center">
                   <Box
                     sx={{

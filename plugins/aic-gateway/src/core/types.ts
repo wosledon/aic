@@ -57,7 +57,7 @@ export interface Bootstrap {
   clients?: { supported: string[]; minimum_plugin_version: string };
 }
 
-export type ProjectSource = 'explicit' | 'project_config' | 'repo_mapping' | 'unattributed';
+export type ProjectSource = 'explicit' | 'project_config' | 'repo_mapping' | 'repo' | 'cwd' | 'unattributed';
 
 export interface ResolvedProject {
   key: string | null;
