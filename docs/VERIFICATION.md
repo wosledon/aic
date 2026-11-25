@@ -202,3 +202,9 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 - `robots.txt`、`sitemap.xml`、`404.html` 均返回 200；sitemap 含中英文 hreflang。
 - GitHub About：description、homepage、12 个 topics 已配置。
 - 期间 GitHub 出现 Partial System Outage（Pages / Git Operations），恢复后构建完成。
+
+## 页面图片比例与访问徽标（2026-11-26 00:40）
+
+- 修复 Pages 图片被 width/height 属性拉高：全局 img { height: auto }，hero 与宫格图恢复 16:10。
+- 1920px 实测：hero 1064x666、宫格图 579x362，比例 1.6；390px 无横向溢出。
+- footer 增加 visitorbadge 访问人数徽标；README 顶部同步。
