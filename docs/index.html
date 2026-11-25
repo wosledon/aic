@@ -48,6 +48,18 @@
       "inLanguage": ["en", "zh-CN"]
     }
   </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is AIControl?", "acceptedAnswer": { "@type": "Answer", "text": "AIControl is a self-hosted LLM gateway and AI usage audit platform. It sits between coding agents and model providers, adding unified identity, per-project attribution and approval telemetry." } },
+        { "@type": "Question", "name": "Do teams have to switch coding tools?", "acceptedAnswer": { "@type": "Answer", "text": "No. Pi, Codex CLI, Claude Code and GitHub Copilot CLI keep their native workflows. Adapters only inject the gateway endpoint, a short-lived token and attribution headers." } },
+        { "@type": "Question", "name": "What can be audited beyond token counts?", "acceptedAnswer": { "@type": "Answer", "text": "Who made each request, which project, session, model and client it belongs to, plus tool-call risk and approval decisions. Prompts, code and command text are not captured by default." } },
+        { "@type": "Question", "name": "Which providers and clients are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Any OpenAI Chat Completions/Responses, Anthropic Messages or Google Generative AI compatible endpoint, plus Pi, Codex CLI, Claude Code and GitHub Copilot CLI." } }
+      ]
+    }
+  </script>
   <style>
     :root {
       --bg: #060a14;
@@ -242,6 +254,14 @@
     .contact a { color: #a9b8ff; text-decoration: underline; text-underline-offset: 3px; }
     .contact a:hover { color: #dbe4ff; }
 
+    .faq { display: grid; gap: 12px; }
+    .faq details { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); padding: 16px 18px; }
+    .faq summary { cursor: pointer; font-weight: 700; font-size: 14px; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; color: #8ea2ff; font-weight: 600; }
+    .faq details[open] summary::after { content: "−"; }
+    .faq p { margin: 10px 0 0; color: var(--muted); font-size: 13.5px; }
+
     footer { margin-top: 64px; border-top: 1px solid var(--line); padding: 30px 0 42px; }
     .foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; }
     .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -403,6 +423,19 @@
       </div>
     </section>
 
+    <section id="faq" class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="faq.kicker">FAQ</span>
+        <h2 data-i18n="faq.title">Questions teams ask first</h2>
+      </div>
+      <div class="faq">
+        <details open><summary data-i18n="faq.q1">What is AIControl?</summary><p data-i18n="faq.a1">AIControl is a self-hosted LLM gateway and AI usage audit platform. It sits between coding agents and model providers, adding unified identity, per-project attribution and approval telemetry.</p></details>
+        <details><summary data-i18n="faq.q2">Do teams have to switch coding tools?</summary><p data-i18n="faq.a2">No. Pi, Codex CLI, Claude Code and GitHub Copilot CLI keep their native workflows. Adapters only inject the gateway endpoint, a short-lived token and attribution headers.</p></details>
+        <details><summary data-i18n="faq.q3">What can be audited beyond token counts?</summary><p data-i18n="faq.a3">Who made each request, which project, session, model and client it belongs to, plus tool-call risk and approval decisions. Prompts, code and command text are not captured by default.</p></details>
+        <details><summary data-i18n="faq.q4">Which providers and clients are supported?</summary><p data-i18n="faq.a4">Any OpenAI Chat Completions/Responses, Anthropic Messages or Google Generative AI compatible endpoint, plus Pi, Codex CLI, Claude Code and GitHub Copilot CLI.</p></details>
+      </div>
+    </section>
+
     <section id="start" class="section wrap">
       <div class="section-head">
         <span class="kicker" data-i18n="start.kicker">Quick start</span>
@@ -531,6 +564,12 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
         "arch.gateway": "Gateway /gw/*", "arch.gateway.d": "policy · quota · usage parsing",
         "arch.ui": "React console", "arch.api": "Admin & plugin APIs", "arch.db": "SQLite + EF Core",
         "arch.note": "Secrets are encrypted at rest; telemetry stores metadata only — never prompts, code or command text.",
+        "faq.kicker": "FAQ",
+        "faq.title": "Questions teams ask first",
+        "faq.q1": "What is AIControl?", "faq.a1": "AIControl is a self-hosted LLM gateway and AI usage audit platform. It sits between coding agents and model providers, adding unified identity, per-project attribution and approval telemetry.",
+        "faq.q2": "Do teams have to switch coding tools?", "faq.a2": "No. Pi, Codex CLI, Claude Code and GitHub Copilot CLI keep their native workflows. Adapters only inject the gateway endpoint, a short-lived token and attribution headers.",
+        "faq.q3": "What can be audited beyond token counts?", "faq.a3": "Who made each request, which project, session, model and client it belongs to, plus tool-call risk and approval decisions. Prompts, code and command text are not captured by default.",
+        "faq.q4": "Which providers and clients are supported?", "faq.a4": "Any OpenAI Chat Completions/Responses, Anthropic Messages or Google Generative AI compatible endpoint, plus Pi, Codex CLI, Claude Code and GitHub Copilot CLI.",
         "start.kicker": "Quick start", "start.title": "From clone to first governed request",
         "start.sub": "Requires .NET 10 SDK and Node.js 20+. SQLite and demo data are created automatically.",
         "start.s1.t": "Run the backend", "start.s1.d": "Starts the gateway, admin API and bundled console on port 5080.",
@@ -606,6 +645,12 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
         "arch.gateway": "网关 /gw/*", "arch.gateway.d": "策略 · 配额 · 用量解析",
         "arch.ui": "React 控制台", "arch.api": "管理与插件 API", "arch.db": "SQLite + EF Core",
         "arch.note": "密钥静态加密；遥测只存元数据，不采集 Prompt、代码或命令原文。",
+        "faq.kicker": "常见问题",
+        "faq.title": "团队最先问的几个问题",
+        "faq.q1": "AIControl 是什么？", "faq.a1": "AIControl 是自托管的 LLM 网关与 AI 使用审计平台，位于编码 Agent 与模型供应商之间，提供统一身份、按项目归因与审批遥测。",
+        "faq.q2": "团队必须更换编码工具吗？", "faq.a2": "不需要。Pi、Codex CLI、Claude Code、GitHub Copilot CLI 保持原生工作流；适配器只注入网关地址、短期令牌与归因头。",
+        "faq.q3": "除了 Token 数量，还能审计什么？", "faq.a3": "每次请求是谁发起的，属于哪个项目、会话、模型与客户端，以及工具调用风险与审批决策；默认不采集 Prompt、代码与命令原文。",
+        "faq.q4": "支持哪些供应商与客户端？", "faq.a4": "任意 OpenAI Chat Completions/Responses、Anthropic Messages、Google Generative AI 兼容端点，以及 Pi、Codex CLI、Claude Code、GitHub Copilot CLI。",
         "start.kicker": "快速开始", "start.title": "从克隆到第一次受治理调用",
         "start.sub": "需要 .NET 10 SDK 与 Node.js 20+，SQLite 与演示数据会自动创建。",
         "start.s1.t": "启动后端", "start.s1.d": "在 5080 端口启动网关、管理 API 与内置控制台。",
