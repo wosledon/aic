@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/AIControl.Domain/AIControl.Domain.csproj" />
+  <Project Path="src/AIControl.Infrastructure/AIControl.Infrastructure.csproj" />
+  <Project Path="src/AIControl.Server/AIControl.Server.csproj" />
+  <Project Path="tests/AIControl.UnitTests/AIControl.UnitTests.csproj" />
+</Solution>
