@@ -211,3 +211,7 @@ docs/                          PRD、UI 规范、验证记录、GitHub Pages
   <a href="https://github.com/wosledon/aic"><strong>⭐ 在 GitHub 点 Star</strong></a> ·
   <a href="https://wosledon.github.io/aic/"><strong>English site</strong></a>
 </p>
+
+## 联系
+
+问题、建议或合作：[powertle@outlook.com](mailto:powertle@outlook.com)。

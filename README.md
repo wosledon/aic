@@ -213,3 +213,7 @@ If AIControl is useful or interesting, a star helps others find it:
   <a href="https://github.com/wosledon/aic"><strong>⭐ Star on GitHub</strong></a> ·
   <a href="https://wosledon.github.io/aic/?lang=zh"><strong>中文介绍</strong></a>
 </p>
+
+## Contact
+
+Questions, ideas or issues: [powertle@outlook.com](mailto:powertle@outlook.com).
