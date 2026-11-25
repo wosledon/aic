@@ -649,6 +649,10 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
       setMeta('meta[name="twitter:title"]', t["meta.title"]);
       setMeta('meta[name="twitter:description"]', t["meta.description"]);
       setMeta('meta[property="og:locale"]', lang === "zh" ? "zh_CN" : "en_US");
+      const canonicalUrl = "https://wosledon.github.io/aic/docs/" + (lang === "zh" ? "?lang=zh" : "");
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute("href", canonicalUrl);
+      setMeta('meta[property="og:url"]', canonicalUrl);
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         const value = t[el.dataset.i18n];
         if (value !== undefined) el.innerHTML = value;
