@@ -24,12 +24,16 @@
 
 ## Why AIControl
 
-Coding agents such as **Pi**, **Codex CLI**, **Claude Code**, and **GitHub Copilot CLI** each bring their own provider configuration, credentials, and usage silos. AIControl puts one governed gateway in front of them:
+### The gap: you can see the bill, not the work
 
-- clients only ever receive a **short-lived gateway token**;
-- upstream base URLs and API keys stay **server-side and encrypted**;
-- every request is attributed to a **user, project, session, and model**;
-- high-risk tool calls become **auditable approval decisions**.
+An API key can tell you how many tokens were consumed. It cannot tell you **who** used them, **which project** they served, **which agent** ran the request, or **what kind of work** was performed. Locking everyone into a single tool is rarely the answer either — teams do their best work when they can choose the agent that fits the task.
+
+AIControl closes that gap without standardizing on one client:
+
+- **Keep the tools your team already uses.** Pi, Codex CLI, Claude Code and GitHub Copilot CLI connect through native adapters, not a replacement IDE.
+- **Turn raw consumption into an audit trail.** Each request is attributed to a user, project, session, model and client, with tool-call and approval metadata captured at the edge.
+- **Give people an identity, not a shared key.** Console SSO and CLI device-code login issue short-lived gateway tokens that can be revoked per person or device.
+- **Keep provider credentials server-side.** Upstream base URLs and API keys never leave the gateway and are encrypted at rest.
 
 ## Features
 
