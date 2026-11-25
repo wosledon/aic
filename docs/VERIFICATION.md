@@ -182,3 +182,8 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 | `aic model set step-3.7-flash` 后直接 `aic-copilot` | 返回「成功」，无需 `--model`                                            |
 | 用量归因                                            | 项目 `aic` 下 `step-3.7-flash` 累计 6 次 / 97,012 Token                 |
 | 会话                                                | `client=copilot-cli`、`project_key=aic`、`repo=github.com/wosledon/aic` |
+## 双语 README 与 GitHub Pages（2026-11-26 00:06）
+
+- 截图：dashboard / usage / projects / approvals / models / sessions / settings / login，另含深浅色概览；移动端 390px 无横向溢出。
+- README：`README.md` 英文默认，`README.zh-CN.md` 中文，顶部互相切换，包含截图、架构、快速开始、客户端、配置与 Star 引导。
+- GitHub Pages：`docs/index.html` 单页站点，默认英文，右上角切换中文（`?lang=zh` 可直达），含截图壁纸、架构、快速开始与 Star CTA；`docs/zh/index.html` 提供中文跳转，`docs/.nojekyll` 关闭 Jekyll。

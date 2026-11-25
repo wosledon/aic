@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AIControl — Enterprise LLM Gateway</title>
+  <meta name="description" content="One governed gateway for Pi, Codex CLI, Claude Code and GitHub Copilot CLI: per-project token analytics, approval governance and zero provider keys on the client." />
+  <meta property="og:title" content="AIControl — Enterprise LLM Gateway" />
+  <meta property="og:description" content="One governed gateway for every coding agent. Token analytics, approvals, quotas and encrypted provider keys." />
+  <meta property="og:image" content="https://wosledon.github.io/aic/screenshots/dashboard-light.png" />
+  <link rel="canonical" href="https://wosledon.github.io/aic/" />
+  <link rel="alternate" hreflang="en" href="https://wosledon.github.io/aic/?lang=en" />
+  <link rel="alternate" hreflang="zh-CN" href="https://wosledon.github.io/aic/?lang=zh" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234f6ef7'/%3E%3Ctext x='32' y='42' font-size='26' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3EAIC%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #060a14;
+      --bg-soft: #0a1120;
+      --panel: #0d1527;
+      --panel-2: #101a30;
+      --line: rgba(148, 163, 184, 0.16);
+      --line-strong: rgba(148, 163, 184, 0.28);
+      --text: #e6ecf8;
+      --muted: #93a1ba;
+      --accent: #5b7cfa;
+      --accent-2: #22d3ee;
+      --green: #34d399;
+      --shadow: 0 30px 80px rgba(2, 6, 23, 0.55);
+      --radius: 18px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(91, 124, 250, 0.22), transparent 60%),
+        radial-gradient(800px 450px at 90% 0%, rgba(34, 211, 238, 0.12), transparent 55%),
+        var(--bg);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    code, pre { font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 30;
+      backdrop-filter: blur(18px);
+      background: rgba(6, 10, 20, 0.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner { display: flex; align-items: center; gap: 22px; height: 68px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0.2px; }
+    .logo {
+      width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center;
+      background: linear-gradient(135deg, #7b93ff, #3d5cf0);
+      box-shadow: 0 10px 24px rgba(79, 110, 247, 0.35);
+      font-size: 13px; font-weight: 900;
+    }
+    .brand small { display: block; font-size: 10px; letter-spacing: 0.18em; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+    .brand strong { font-size: 16px; line-height: 1.1; }
+    nav { display: flex; gap: 18px; margin-left: 8px; }
+    nav a { color: var(--muted); font-size: 13.5px; font-weight: 600; padding: 6px 2px; }
+    nav a:hover { color: var(--text); }
+    .actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 9px 15px; border-radius: 10px; font-size: 13px; font-weight: 700;
+      border: 1px solid var(--line-strong); color: var(--text); background: rgba(255,255,255,0.02);
+      transition: 0.18s ease; white-space: nowrap;
+    }
+    .btn:hover { border-color: rgba(91,124,250,0.7); transform: translateY(-1px); }
+    .btn.primary {
+      background: linear-gradient(135deg, #6d86ff, #4b66f0);
+      border-color: transparent; box-shadow: 0 12px 28px rgba(75, 102, 240, 0.35);
+    }
+    .btn.star { background: rgba(250, 204, 21, 0.09); border-color: rgba(250, 204, 21, 0.35); color: #fde68a; }
+    .lang {
+      border: 1px solid var(--line-strong); background: transparent; color: var(--muted);
+      padding: 8px 12px; border-radius: 9px; cursor: pointer; font-size: 12.5px; font-weight: 700;
+    }
+    .lang:hover { color: var(--text); border-color: rgba(91,124,250,0.7); }
+
+    .hero { padding: 84px 0 36px; text-align: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 700;
+      color: #a9b8ff; background: rgba(91, 124, 250, 0.12); border: 1px solid rgba(91, 124, 250, 0.3);
+      letter-spacing: 0.05em; text-transform: uppercase;
+    }
+    .hero h1 {
+      margin: 20px auto 16px; max-width: 1000px;
+      font-size: clamp(38px, 5.4vw, 62px); line-height: 1.07; letter-spacing: -0.035em;
+      background: linear-gradient(180deg, #ffffff 0%, #b8c6ea 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p { max-width: 760px; margin: 0 auto; color: var(--muted); font-size: 17px; }
+    .hero-cta { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .stars { display: inline-flex; align-items: center; }
+    .hero-shot {
+      margin: 44px auto 0; max-width: 1080px; min-width: 0;
+      border-radius: 20px; padding: 8px;
+      background: linear-gradient(180deg, rgba(91,124,250,0.35), rgba(34,211,238,0.08));
+      box-shadow: var(--shadow);
+    }
+    .hero-shot img { border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); }
+
+    .stats { padding: 34px 0 6px; }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+      border: 1px solid var(--line); background: rgba(13, 21, 39, 0.6);
+      border-radius: var(--radius); padding: 22px;
+    }
+    .stat b { display: block; font-size: 28px; letter-spacing: -0.02em; }
+    .stat span { color: var(--muted); font-size: 12.5px; }
+
+    .section { padding: 72px 0 8px; }
+    .section-head { max-width: 720px; margin-bottom: 26px; }
+    .kicker { color: #8ea2ff; font-size: 12px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; }
+    .section h2 { margin: 8px 0 10px; font-size: clamp(26px, 3.4vw, 38px); line-height: 1.16; letter-spacing: -0.025em; }
+    .section-head p { margin: 0; color: var(--muted); }
+
+    .features { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .card {
+      padding: 20px; border-radius: 16px;
+      border: 1px solid var(--line); background: linear-gradient(180deg, rgba(16,26,48,0.9), rgba(10,17,32,0.9));
+      transition: 0.18s ease;
+    }
+    .card:hover { transform: translateY(-3px); border-color: rgba(91,124,250,0.45); }
+    .card .icon {
+      width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
+      background: rgba(91, 124, 250, 0.12); border: 1px solid rgba(91,124,250,0.22); font-size: 17px;
+    }
+    .card h3 { margin: 14px 0 6px; font-size: 15px; }
+    .card p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    figure {
+      margin: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+      background: var(--panel); box-shadow: 0 18px 40px rgba(2,6,23,0.35);
+    }
+    figure img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-bottom: 1px solid var(--line); }
+    figcaption { padding: 12px 16px; font-size: 12.5px; color: var(--muted); display: flex; justify-content: space-between; gap: 10px; }
+    figcaption b { color: var(--text); font-weight: 650; }
+
+    .arch {
+      border: 1px solid var(--line); border-radius: var(--radius);
+      background: radial-gradient(600px 260px at 50% 0%, rgba(91,124,250,0.12), transparent 70%), var(--panel);
+      padding: 28px; display: grid; gap: 18px;
+    }
+    .arch-row { display: flex; justify-content: center; align-items: stretch; gap: 14px; flex-wrap: wrap; }
+    .node {
+      flex: 1 1 150px; max-width: 220px; text-align: center;
+      padding: 16px 12px; border-radius: 13px; border: 1px solid var(--line-strong);
+      background: rgba(8, 14, 28, 0.72);
+    }
+    .node b { display: block; font-size: 13.5px; }
+    .node small { color: var(--muted); font-size: 11.5px; }
+    .node.accent { border-color: rgba(91,124,250,0.55); background: rgba(91,124,250,0.1); }
+    .arrow { display: grid; place-items: center; color: #6f86d8; font-size: 20px; flex: 0 0 auto; }
+    .arch-caption { text-align: center; color: var(--muted); font-size: 12.5px; }
+
+    .steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .step { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); padding: 20px; min-width: 0; }
+    .step h3 { margin: 0 0 4px; font-size: 15px; display: flex; align-items: center; gap: 10px; }
+    .step h3 span {
+      width: 24px; height: 24px; border-radius: 8px; display: grid; place-items: center;
+      background: rgba(91,124,250,0.16); border: 1px solid rgba(91,124,250,0.35); font-size: 12px;
+    }
+    .step p { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .code {
+      position: relative; background: #070d1a; border: 1px solid var(--line); border-radius: 11px;
+      padding: 13px 44px 13px 14px; overflow-x: auto; min-width: 0; max-width: 100%;
+    }
+    .code pre { margin: 0; font-size: 12.3px; line-height: 1.75; color: #c9d6f2; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .copy {
+      position: absolute; top: 8px; right: 8px; border: 1px solid var(--line-strong);
+      background: rgba(255,255,255,0.04); color: var(--muted); border-radius: 7px;
+      font-size: 11px; padding: 4px 8px; cursor: pointer;
+    }
+    .copy:hover { color: var(--text); border-color: var(--accent); }
+    .note { margin-top: 16px; color: var(--muted); font-size: 12.5px; }
+
+    .clients { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    .client { padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); min-width: 0; }
+    .client b { display: block; margin-bottom: 4px; font-size: 14px; }
+    .client code { color: #9fb2ff; font-size: 12px; }
+    .client p { margin: 7px 0 0; color: var(--muted); font-size: 12.5px; }
+
+    .star-banner {
+      margin: 78px 0 0; padding: 38px 28px; border-radius: 22px; text-align: center;
+      border: 1px solid rgba(91,124,250,0.35);
+      background:
+        radial-gradient(700px 220px at 50% 0%, rgba(91,124,250,0.28), transparent 70%),
+        linear-gradient(180deg, rgba(16,26,48,0.95), rgba(8,14,28,0.95));
+      box-shadow: var(--shadow);
+    }
+    .star-banner h2 { margin: 0 0 8px; font-size: clamp(24px, 3vw, 32px); }
+    .star-banner p { margin: 0 auto 20px; max-width: 620px; color: var(--muted); }
+
+    footer { margin-top: 64px; border-top: 1px solid var(--line); padding: 30px 0 42px; }
+    .foot { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: var(--muted); font-size: 12.5px; }
+    .foot-links { display: flex; gap: 16px; flex-wrap: wrap; }
+    .foot a:hover { color: var(--text); }
+
+    @media (max-width: 980px) {
+      nav { display: none; }
+      .features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .clients { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 720px) {
+      .header-inner { height: 60px; gap: 8px; }
+      .actions { gap: 6px; }
+      .actions .btn { padding: 8px 10px; font-size: 12px; }
+      .actions .btn.ghost { display: none; }
+      .brand small { display: none; }
+      .hero { padding-top: 56px; }
+      .gallery, .steps { grid-template-columns: minmax(0, 1fr); }
+      .features { grid-template-columns: minmax(0, 1fr); }
+      .clients { grid-template-columns: minmax(0, 1fr); }
+      .stats-grid { gap: 10px; padding: 16px; }
+      .arch { padding: 18px; }
+      .arrow { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./">
+        <span class="logo">AIC</span>
+        <span><strong>AIControl</strong><small data-i18n="brand.sub">Enterprise LLM Gateway</small></span>
+      </a>
+      <nav>
+        <a href="#features" data-i18n="nav.features">Features</a>
+        <a href="#screens" data-i18n="nav.screens">Screenshots</a>
+        <a href="#arch" data-i18n="nav.arch">Architecture</a>
+        <a href="#start" data-i18n="nav.start">Quick start</a>
+      </nav>
+      <div class="actions">
+        <button class="lang" id="langToggle" type="button" aria-label="Switch language">中文</button>
+        <a class="btn ghost" href="https://github.com/wosledon/aic" data-i18n="nav.github">GitHub</a>
+        <a class="btn star" href="https://github.com/wosledon/aic/stargazers">⭐ <span data-i18n="nav.star">Star</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero wrap">
+      <span class="eyebrow" data-i18n="hero.eyebrow">Enterprise LLM gateway</span>
+      <h1 data-i18n="hero.title">One gateway.<br />Full control over every model call.</h1>
+      <p data-i18n="hero.sub">Give Pi, Codex CLI, Claude Code and GitHub Copilot CLI a single governed endpoint. Short-lived tokens on the client, encrypted provider keys on the server, and token analytics plus approvals for every request.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#start" data-i18n="hero.start">Get started</a>
+        <a class="btn" href="https://github.com/wosledon/aic" data-i18n="hero.github">View source</a>
+        <a class="stars" href="https://github.com/wosledon/aic/stargazers" aria-label="GitHub stars">
+          <img src="https://img.shields.io/github/stars/wosledon/aic?style=social" alt="GitHub stars" />
+        </a>
+      </div>
+      <div class="hero-shot">
+        <img src="./screenshots/dashboard-light.png" alt="AIControl dashboard" />
+      </div>
+    </section>
+
+    <section class="stats wrap">
+      <div class="stats-grid">
+        <div class="stat"><b>4</b><span data-i18n="stat.clients">coding agents, one endpoint</span></div>
+        <div class="stat"><b>4</b><span data-i18n="stat.protocols">API protocols proxied natively</span></div>
+        <div class="stat"><b>0</b><span data-i18n="stat.keys">provider keys on the client</span></div>
+        <div class="stat"><b>100%</b><span data-i18n="stat.metadata">metadata-only telemetry by default</span></div>
+      </div>
+    </section>
+
+    <section id="features" class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="features.kicker">Capabilities</span>
+        <h2 data-i18n="features.title">Governance without slowing agents down</h2>
+        <p data-i18n="features.sub">Everything an enterprise needs to observe, attribute and constrain coding-agent traffic — without changing the protocols your tools already speak.</p>
+      </div>
+      <div class="features">
+        <article class="card"><div class="icon">🔐</div><h3 data-i18n="f1.t">Zero client-side keys</h3><p data-i18n="f1.d">Clients receive short-lived gateway tokens only; upstream base URLs and API keys stay encrypted server-side.</p></article>
+        <article class="card"><div class="icon">🔀</div><h3 data-i18n="f2.t">Protocol-preserving proxy</h3><p data-i18n="f2.d">OpenAI Chat Completions / Responses, Anthropic Messages and Google Generative AI pass through unchanged.</p></article>
+        <article class="card"><div class="icon">📦</div><h3 data-i18n="f3.t">Provider + model catalog</h3><p data-i18n="f3.d">Import from models.dev and bind each public model to exactly one upstream channel. No routing tables.</p></article>
+        <article class="card"><div class="icon">📊</div><h3 data-i18n="f4.t">Per-project token analytics</h3><p data-i18n="f4.d">Input, output, cache-read and cache-write tokens attributed to user, project, session and model.</p></article>
+        <article class="card"><div class="icon">🪪</div><h3 data-i18n="f5.t">Feishu SSO + device flow</h3><p data-i18n="f5.d">Console SSO and CLI device-code login share one Feishu app, with a dev login for local demos.</p></article>
+        <article class="card"><div class="icon">🛡️</div><h3 data-i18n="f6.t">Approval governance</h3><p data-i18n="f6.d">Risk-classified tool calls with approve / deny / policy decisions, aggregated per user, project and tool.</p></article>
+        <article class="card"><div class="icon">🎯</div><h3 data-i18n="f7.t">Automatic attribution</h3><p data-i18n="f7.d">Plugins report project key, name and Git repository; projects and members are created on first sight.</p></article>
+        <article class="card"><div class="icon">⚙️</div><h3 data-i18n="f8.t">Quotas &amp; policies</h3><p data-i18n="f8.d">Daily and monthly quotas, model allowlists, approval rules and rate-limit policies per user or project.</p></article>
+      </div>
+    </section>
+
+    <section id="screens" class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="screens.kicker">Product tour</span>
+        <h2 data-i18n="screens.title">A console built for operators</h2>
+        <p data-i18n="screens.sub">From real-time token trends to per-user approvals — every screen is backed by the same gateway telemetry.</p>
+      </div>
+      <div class="gallery">
+        <figure><img src="./screenshots/dashboard.png" alt="Dashboard" loading="lazy" /><figcaption><b data-i18n="screen.dashboard">Dashboard</b><span data-i18n="screen.dashboard.d">Live tokens, requests, approvals</span></figcaption></figure>
+        <figure><img src="./screenshots/usage.png" alt="Usage" loading="lazy" /><figcaption><b data-i18n="screen.usage">Usage analytics</b><span data-i18n="screen.usage.d">By user, project, model, protocol</span></figcaption></figure>
+        <figure><img src="./screenshots/projects.png" alt="Projects" loading="lazy" /><figcaption><b data-i18n="screen.projects">Project attribution</b><span data-i18n="screen.projects.d">Auto-created from plugin reports</span></figcaption></figure>
+        <figure><img src="./screenshots/approvals.png" alt="Approvals" loading="lazy" /><figcaption><b data-i18n="screen.approvals">Approval governance</b><span data-i18n="screen.approvals.d">Per-user decisions and risk</span></figcaption></figure>
+        <figure><img src="./screenshots/models.png" alt="Models" loading="lazy" /><figcaption><b data-i18n="screen.models">Providers &amp; models</b><span data-i18n="screen.models.d">models.dev import, direct binding</span></figcaption></figure>
+        <figure><img src="./screenshots/sessions.png" alt="Sessions" loading="lazy" /><figcaption><b data-i18n="screen.sessions">Sessions</b><span data-i18n="screen.sessions.d">Agent turns and tool calls</span></figcaption></figure>
+        <figure><img src="./screenshots/settings.png" alt="Settings" loading="lazy" /><figcaption><b data-i18n="screen.settings">Settings</b><span data-i18n="screen.settings.d">Feishu SSO and health checks</span></figcaption></figure>
+        <figure><img src="./screenshots/login.png" alt="Login" loading="lazy" /><figcaption><b data-i18n="screen.login">Login</b><span data-i18n="screen.login.d">Feishu SSO or demo accounts</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section id="arch" class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="arch.kicker">Architecture</span>
+        <h2 data-i18n="arch.title">One hop, no protocol rewriting</h2>
+        <p data-i18n="arch.sub">Agents talk to the gateway through their native APIs. The gateway resolves the public model, applies policy, forwards once, and records usage from the upstream response.</p>
+      </div>
+      <div class="arch">
+        <div class="arch-row">
+          <div class="node"><b>Pi</b><small>coding agent</small></div>
+          <div class="node"><b>Codex CLI</b><small>aic-codex</small></div>
+          <div class="node"><b>Claude Code</b><small>aic-claude</small></div>
+          <div class="node"><b>Copilot CLI</b><small>aic-copilot</small></div>
+        </div>
+        <div class="arch-row"><span class="arrow">↓</span></div>
+        <div class="arch-row">
+          <div class="node accent"><b data-i18n="arch.cli">AIC CLI + adapters</b><small data-i18n="arch.cli.d">short-lived token · project headers</small></div>
+          <span class="arrow">→</span>
+          <div class="node accent"><b data-i18n="arch.gateway">Gateway /gw/*</b><small data-i18n="arch.gateway.d">policy · quota · usage parsing</small></div>
+          <span class="arrow">→</span>
+          <div class="node"><b>OpenAI</b><small>chat / responses</small></div>
+          <div class="node"><b>Anthropic</b><small>messages</small></div>
+          <div class="node"><b>Google</b><small>generative AI</small></div>
+        </div>
+        <div class="arch-row"><span class="arrow">↓</span></div>
+        <div class="arch-row">
+          <div class="node"><b data-i18n="arch.ui">React console</b><small>MUI · charts</small></div>
+          <span class="arrow">→</span>
+          <div class="node"><b data-i18n="arch.api">Admin &amp; plugin APIs</b><small>JWT · cookie · CSRF</small></div>
+          <span class="arrow">→</span>
+          <div class="node"><b data-i18n="arch.db">SQLite + EF Core</b><small>usage · telemetry · audit</small></div>
+        </div>
+        <p class="arch-caption" data-i18n="arch.note">Secrets are encrypted at rest; telemetry stores metadata only — never prompts, code or command text.</p>
+      </div>
+    </section>
+
+    <section id="start" class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="start.kicker">Quick start</span>
+        <h2 data-i18n="start.title">From clone to first governed request</h2>
+        <p data-i18n="start.sub">Requires .NET 10 SDK and Node.js 20+. SQLite and demo data are created automatically.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3><span>1</span><b data-i18n="start.s1.t">Run the backend</b></h3>
+          <p data-i18n="start.s1.d">Starts the gateway, admin API and bundled console on port 5080.</p>
+          <div class="code"><button class="copy" type="button" data-i18n="copy">Copy</button><pre>dotnet run --project src/AIControl.Server --urls http://localhost:5080</pre></div>
+        </div>
+        <div class="step">
+          <h3><span>2</span><b data-i18n="start.s2.t">Sign in</b></h3>
+          <p data-i18n="start.s2.d">Open the console and use the demo account, or configure Feishu SSO.</p>
+          <div class="code"><button class="copy" type="button" data-i18n="copy">Copy</button><pre>http://localhost:5080
+admin@aic.local  # demo login</pre></div>
+        </div>
+        <div class="step">
+          <h3><span>3</span><b data-i18n="start.s3.t">Install the CLI</b></h3>
+          <p data-i18n="start.s3.d">Build the plugin package and expose aic / aic-copilot / aic-codex / aic-claude.</p>
+          <div class="code"><button class="copy" type="button" data-i18n="copy">Copy</button><pre>cd plugins/aic-gateway
+npm install &amp;&amp; npm run build
+npm install -g .</pre></div>
+        </div>
+        <div class="step">
+          <h3><span>4</span><b data-i18n="start.s4.t">Connect an agent</b></h3>
+          <p data-i18n="start.s4.d">Device-code login, choose a default model, then launch your agent.</p>
+          <div class="code"><button class="copy" type="button" data-i18n="copy">Copy</button><pre>aic login
+aic model set step-3.7-flash
+aic-copilot   # or aic-codex / aic-claude</pre></div>
+        </div>
+      </div>
+      <p class="note" data-i18n="start.note">Windows: if global install needs a writable prefix, add <code>--prefix "$env:APPDATA\npm"</code>. Pi loads the extension automatically after installation.</p>
+    </section>
+
+    <section class="section wrap">
+      <div class="section-head">
+        <span class="kicker" data-i18n="clients.kicker">Clients</span>
+        <h2 data-i18n="clients.title">Bring the agent you already use</h2>
+        <p data-i18n="clients.sub">Each adapter keeps the client's native configuration model and adds only what AIControl needs.</p>
+      </div>
+      <div class="clients">
+        <div class="client"><b>Pi</b><code>pi</code><p data-i18n="client.pi">Extension-based provider, approval hooks and session telemetry.</p></div>
+        <div class="client"><b>Codex CLI</b><code>aic-codex</code><p data-i18n="client.codex">Injects a dedicated profile with gateway base URL and attribution headers.</p></div>
+        <div class="client"><b>Claude Code</b><code>aic-claude</code><p data-i18n="client.claude">Sets Anthropic base URL / token and registers approval hooks.</p></div>
+        <div class="client"><b>Copilot CLI</b><code>aic-copilot</code><p data-i18n="client.copilot">BYOK provider with a fresh token per request and project headers.</p></div>
+      </div>
+    </section>
+
+    <section class="star-banner wrap">
+      <h2 data-i18n="star.title">⭐ Star AIControl</h2>
+      <p data-i18n="star.sub">If this project is useful or interesting, a star helps more people discover it — and tells us to keep shipping.</p>
+      <a class="btn primary" href="https://github.com/wosledon/aic/stargazers" data-i18n="star.button">Star on GitHub</a>
+      <a class="btn" href="https://github.com/wosledon/aic" style="margin-left:8px" data-i18n="star.code">Browse the code</a>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© 2026 AIControl · <span data-i18n="footer.tag">Enterprise LLM gateway demo</span></div>
+      <div class="foot-links">
+        <a href="https://github.com/wosledon/aic" data-i18n="footer.repo">GitHub</a>
+        <a href="https://github.com/wosledon/aic/blob/main/README.md" data-i18n="footer.readme">README (EN)</a>
+        <a href="https://github.com/wosledon/aic/blob/main/README.zh-CN.md" data-i18n="footer.readmezh">README (中文)</a>
+        <a href="https://github.com/wosledon/aic/blob/main/docs/PRD.md" data-i18n="footer.prd">PRD</a>
+        <a href="https://github.com/wosledon/aic/blob/main/docs/VERIFICATION.md" data-i18n="footer.verify">Verification</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const dict = {
+      en: {
+        "meta.title": "AIControl — Enterprise LLM Gateway",
+        "brand.sub": "Enterprise LLM Gateway",
+        "nav.features": "Features",
+        "nav.screens": "Screenshots",
+        "nav.arch": "Architecture",
+        "nav.start": "Quick start",
+        "nav.github": "GitHub",
+        "nav.star": "Star",
+        "hero.eyebrow": "Enterprise LLM gateway",
+        "hero.title": "One gateway.<br />Full control over every model call.",
+        "hero.sub": "Give Pi, Codex CLI, Claude Code and GitHub Copilot CLI a single governed endpoint. Short-lived tokens on the client, encrypted provider keys on the server, and token analytics plus approvals for every request.",
+        "hero.start": "Get started",
+        "hero.github": "View source",
+        "stat.clients": "coding agents, one endpoint",
+        "stat.protocols": "API protocols proxied natively",
+        "stat.keys": "provider keys on the client",
+        "stat.metadata": "metadata-only telemetry by default",
+        "features.kicker": "Capabilities",
+        "features.title": "Governance without slowing agents down",
+        "features.sub": "Everything an enterprise needs to observe, attribute and constrain coding-agent traffic — without changing the protocols your tools already speak.",
+        "f1.t": "Zero client-side keys", "f1.d": "Clients receive short-lived gateway tokens only; upstream base URLs and API keys stay encrypted server-side.",
+        "f2.t": "Protocol-preserving proxy", "f2.d": "OpenAI Chat Completions / Responses, Anthropic Messages and Google Generative AI pass through unchanged.",
+        "f3.t": "Provider + model catalog", "f3.d": "Import from models.dev and bind each public model to exactly one upstream channel. No routing tables.",
+        "f4.t": "Per-project token analytics", "f4.d": "Input, output, cache-read and cache-write tokens attributed to user, project, session and model.",
+        "f5.t": "Feishu SSO + device flow", "f5.d": "Console SSO and CLI device-code login share one Feishu app, with a dev login for local demos.",
+        "f6.t": "Approval governance", "f6.d": "Risk-classified tool calls with approve / deny / policy decisions, aggregated per user, project and tool.",
+        "f7.t": "Automatic attribution", "f7.d": "Plugins report project key, name and Git repository; projects and members are created on first sight.",
+        "f8.t": "Quotas & policies", "f8.d": "Daily and monthly quotas, model allowlists, approval rules and rate-limit policies per user or project.",
+        "screens.kicker": "Product tour", "screens.title": "A console built for operators",
+        "screens.sub": "From real-time token trends to per-user approvals — every screen is backed by the same gateway telemetry.",
+        "screen.dashboard": "Dashboard", "screen.dashboard.d": "Live tokens, requests, approvals",
+        "screen.usage": "Usage analytics", "screen.usage.d": "By user, project, model, protocol",
+        "screen.projects": "Project attribution", "screen.projects.d": "Auto-created from plugin reports",
+        "screen.approvals": "Approval governance", "screen.approvals.d": "Per-user decisions and risk",
+        "screen.models": "Providers & models", "screen.models.d": "models.dev import, direct binding",
+        "screen.sessions": "Sessions", "screen.sessions.d": "Agent turns and tool calls",
+        "screen.settings": "Settings", "screen.settings.d": "Feishu SSO and health checks",
+        "screen.login": "Login", "screen.login.d": "Feishu SSO or demo accounts",
+        "arch.kicker": "Architecture", "arch.title": "One hop, no protocol rewriting",
+        "arch.sub": "Agents talk to the gateway through their native APIs. The gateway resolves the public model, applies policy, forwards once, and records usage from the upstream response.",
+        "arch.cli": "AIC CLI + adapters", "arch.cli.d": "short-lived token · project headers",
+        "arch.gateway": "Gateway /gw/*", "arch.gateway.d": "policy · quota · usage parsing",
+        "arch.ui": "React console", "arch.api": "Admin & plugin APIs", "arch.db": "SQLite + EF Core",
+        "arch.note": "Secrets are encrypted at rest; telemetry stores metadata only — never prompts, code or command text.",
+        "start.kicker": "Quick start", "start.title": "From clone to first governed request",
+        "start.sub": "Requires .NET 10 SDK and Node.js 20+. SQLite and demo data are created automatically.",
+        "start.s1.t": "Run the backend", "start.s1.d": "Starts the gateway, admin API and bundled console on port 5080.",
+        "start.s2.t": "Sign in", "start.s2.d": "Open the console and use the demo account, or configure Feishu SSO.",
+        "start.s3.t": "Install the CLI", "start.s3.d": "Build the plugin package and expose aic / aic-copilot / aic-codex / aic-claude.",
+        "start.s4.t": "Connect an agent", "start.s4.d": "Device-code login, choose a default model, then launch your agent.",
+        "start.note": "Windows: if global install needs a writable prefix, add <code>--prefix \"$env:APPDATA\\npm\"</code>. Pi loads the extension automatically after installation.",
+        "clients.kicker": "Clients", "clients.title": "Bring the agent you already use",
+        "clients.sub": "Each adapter keeps the client's native configuration model and adds only what AIControl needs.",
+        "client.pi": "Extension-based provider, approval hooks and session telemetry.",
+        "client.codex": "Injects a dedicated profile with gateway base URL and attribution headers.",
+        "client.claude": "Sets Anthropic base URL / token and registers approval hooks.",
+        "client.copilot": "BYOK provider with a fresh token per request and project headers.",
+        "star.title": "⭐ Star AIControl",
+        "star.sub": "If this project is useful or interesting, a star helps more people discover it — and tells us to keep shipping.",
+        "star.button": "Star on GitHub", "star.code": "Browse the code",
+        "footer.tag": "Enterprise LLM gateway demo",
+        "footer.repo": "GitHub", "footer.readme": "README (EN)", "footer.readmezh": "README (中文)",
+        "footer.prd": "PRD", "footer.verify": "Verification",
+        "copy": "Copy", "copied": "Copied"
+      },
+      zh: {
+        "meta.title": "AIControl — 企业级大模型网关",
+        "brand.sub": "企业级大模型网关",
+        "nav.features": "功能",
+        "nav.screens": "截图",
+        "nav.arch": "架构",
+        "nav.start": "快速开始",
+        "nav.github": "GitHub",
+        "nav.star": "Star",
+        "hero.eyebrow": "企业级大模型网关",
+        "hero.title": "一个入口，<br />管住每一次模型调用。",
+        "hero.sub": "为 Pi、Codex CLI、Claude Code、GitHub Copilot CLI 提供统一受治理的网关：客户端只拿短期令牌，上游密钥加密留在服务端，并为每次请求记录 Token 用量与审批决策。",
+        "hero.start": "快速开始",
+        "hero.github": "查看源码",
+        "stat.clients": "个编码 Agent，统一入口",
+        "stat.protocols": "种 API 协议原样代理",
+        "stat.keys": "客户端持有的上游密钥",
+        "stat.metadata": "默认仅采集元数据",
+        "features.kicker": "核心能力",
+        "features.title": "治理，但不拖慢 Agent",
+        "features.sub": "企业需要的观测、归因与约束能力都在这里，同时不改变工具已经在用的协议。",
+        "f1.t": "客户端零密钥", "f1.d": "客户端只拿短期网关令牌；上游 Base URL 与 API Key 加密存储在服务端。",
+        "f2.t": "原协议代理", "f2.d": "OpenAI Chat Completions / Responses、Anthropic Messages、Google Generative AI 均原样透传。",
+        "f3.t": "供应商 + 模型目录", "f3.d": "从 models.dev 导入，公共模型直连一个上游通道，不存在路由表。",
+        "f4.t": "按项目 Token 分析", "f4.d": "输入、输出、缓存读写 Token 归因到用户、项目、会话和模型。",
+        "f5.t": "飞书 SSO + 设备码", "f5.d": "控制台 SSO 与 CLI 设备码共用同一飞书应用，本地 Demo 提供开发登录。",
+        "f6.t": "审批治理", "f6.d": "工具调用按风险分类，记录批准 / 拒绝 / 策略拒绝，并按用户、项目、工具聚合。",
+        "f7.t": "自动归因", "f7.d": "插件上报项目 key、名称与 Git 仓库，首次见到即自动建档并记录成员。",
+        "f8.t": "配额与策略", "f8.d": "用户 / 项目日 / 月配额、模型白名单、审批规则与速率策略。",
+        "screens.kicker": "产品界面", "screens.title": "为运维者打造的控制台",
+        "screens.sub": "从实时 Token 趋势到按用户审批，每个页面都来自同一份网关遥测数据。",
+        "screen.dashboard": "概览", "screen.dashboard.d": "实时 Token、请求、审批",
+        "screen.usage": "用量分析", "screen.usage.d": "按用户 / 项目 / 模型 / 协议",
+        "screen.projects": "项目归因", "screen.projects.d": "插件上报后自动建档",
+        "screen.approvals": "审批治理", "screen.approvals.d": "按用户查看决策与风险",
+        "screen.models": "供应商与模型", "screen.models.d": "models.dev 导入，直连绑定",
+        "screen.sessions": "会话明细", "screen.sessions.d": "Agent 轮次与工具调用",
+        "screen.settings": "系统设置", "screen.settings.d": "飞书 SSO 与健康检查",
+        "screen.login": "登录", "screen.login.d": "飞书 SSO 或演示账号",
+        "arch.kicker": "架构", "arch.title": "一跳直达，不改协议",
+        "arch.sub": "Agent 用原生 API 访问网关；网关解析公共模型、执行策略、单跳转发，并从上游响应中记录用量。",
+        "arch.cli": "AIC CLI + 适配器", "arch.cli.d": "短期令牌 · 项目归因头",
+        "arch.gateway": "网关 /gw/*", "arch.gateway.d": "策略 · 配额 · 用量解析",
+        "arch.ui": "React 控制台", "arch.api": "管理与插件 API", "arch.db": "SQLite + EF Core",
+        "arch.note": "密钥静态加密；遥测只存元数据，不采集 Prompt、代码或命令原文。",
+        "start.kicker": "快速开始", "start.title": "从克隆到第一次受治理调用",
+        "start.sub": "需要 .NET 10 SDK 与 Node.js 20+，SQLite 与演示数据会自动创建。",
+        "start.s1.t": "启动后端", "start.s1.d": "在 5080 端口启动网关、管理 API 与内置控制台。",
+        "start.s2.t": "登录", "start.s2.d": "打开控制台使用演示账号，或配置飞书 SSO。",
+        "start.s3.t": "安装 CLI", "start.s3.d": "构建插件包，提供 aic / aic-copilot / aic-codex / aic-claude。",
+        "start.s4.t": "接入 Agent", "start.s4.d": "设备码登录，设置默认模型，然后启动你的 Agent。",
+        "start.note": "Windows 全局安装如权限不足，可加 <code>--prefix \"$env:APPDATA\\npm\"</code>；Pi 安装后会自动加载扩展。",
+        "clients.kicker": "客户端", "clients.title": "继续用你习惯的 Agent",
+        "clients.sub": "每个适配器都保留客户端原生配置方式，只补充 AIControl 需要的信息。",
+        "client.pi": "基于扩展的 Provider、审批钩子与会话遥测。",
+        "client.codex": "注入独立 Codex profile，包含网关地址与归因头。",
+        "client.claude": "设置 Anthropic Base URL / Token，并注册审批钩子。",
+        "client.copilot": "BYOK Provider，每条请求刷新令牌并注入项目归因头。",
+        "star.title": "⭐ 给 AIControl 点个 Star",
+        "star.sub": "如果这个项目对你有帮助，点一个 Star，让更多人发现它，也支持我们继续迭代。",
+        "star.button": "在 GitHub 点 Star", "star.code": "浏览代码",
+        "footer.tag": "企业级大模型网关 Demo",
+        "footer.repo": "GitHub", "footer.readme": "英文 README", "footer.readmezh": "中文 README",
+        "footer.prd": "产品需求", "footer.verify": "验证记录",
+        "copy": "复制", "copied": "已复制"
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const stored = localStorage.getItem("aic-lang");
+    let lang = params.get("lang") === "zh" ? "zh" : params.get("lang") === "en" ? "en" : stored === "zh" ? "zh" : "en";
+
+    function applyLang(next) {
+      lang = next;
+      const t = dict[lang];
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      document.title = t["meta.title"];
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const value = t[el.dataset.i18n];
+        if (value !== undefined) el.innerHTML = value;
+      });
+      const toggle = document.getElementById("langToggle");
+      if (toggle) toggle.textContent = lang === "zh" ? "EN" : "中文";
+      localStorage.setItem("aic-lang", lang);
+      const url = new URL(location.href);
+      url.searchParams.set("lang", lang);
+      history.replaceState(null, "", url);
+    }
+
+    document.getElementById("langToggle")?.addEventListener("click", () => applyLang(lang === "zh" ? "en" : "zh"));
+    document.querySelectorAll(".copy").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const code = button.parentElement?.querySelector("pre")?.innerText ?? "";
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = dict[lang]["copied"];
+          setTimeout(() => (button.textContent = dict[lang]["copy"]), 1400);
+        } catch {
+          /* clipboard unavailable */
+        }
+      });
+    });
+
+    applyLang(lang);
+  </script>
+</body>
+</html>
