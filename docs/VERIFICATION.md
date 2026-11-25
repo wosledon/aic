@@ -187,3 +187,10 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 - 截图：dashboard / usage / projects / approvals / models / sessions / settings / login，另含深浅色概览；移动端 390px 无横向溢出。
 - README：`README.md` 英文默认，`README.zh-CN.md` 中文，顶部互相切换，包含截图、架构、快速开始、客户端、配置与 Star 引导。
 - GitHub Pages：`docs/index.html` 单页站点，默认英文，右上角切换中文（`?lang=zh` 可直达），含截图壁纸、架构、快速开始与 Star CTA；`docs/zh/index.html` 提供中文跳转，`docs/.nojekyll` 关闭 Jekyll。
+
+## SEO 与 Pages 入口（2026-11-26 00:20）
+
+- `docs/index.html`：description / keywords / robots / canonical / hreflang / OG / Twitter Card / JSON-LD（SoftwareApplication）；切换语言时同步 title / description / og:locale。
+- 根目录 `robots.txt` 与 `sitemap.xml`：收录 `/aic/`、`/aic/docs/`、`/aic/docs/zh/`，并声明中英文 hreflang。
+- 根目录 `index.html` 将 `/aic/` 转到 `/aic/docs/`，避免 Jekyll 把 README 当作首页。
+- 已验证：sitemap 可解析（3 个 URL）、robots 指向 sitemap、meta 标签与 JSON-LD 可被浏览器读取。
