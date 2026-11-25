@@ -194,3 +194,11 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 - 根目录 `robots.txt` 与 `sitemap.xml`：收录 `/aic/`、`/aic/docs/`、`/aic/docs/zh/`，并声明中英文 hreflang。
 - 根目录 `index.html` 将 `/aic/` 转到 `/aic/docs/`，避免 Jekyll 把 README 当作首页。
 - 已验证：sitemap 可解析（3 个 URL）、robots 指向 sitemap、meta 标签与 JSON-LD 可被浏览器读取。
+
+## GitHub Pages 上线与 SEO 验收（2026-11-26 00:32）
+
+- `https://wosledon.github.io/aic/` → `/aic/docs/` 跳转正常（200）。
+- `/aic/docs/` 已上线 Why / FAQ / JSON-LD；默认英文，`?lang=zh` 切换中文，标题、描述与 canonical 同步。
+- `robots.txt`、`sitemap.xml`、`404.html` 均返回 200；sitemap 含中英文 hreflang。
+- GitHub About：description、homepage、12 个 topics 已配置。
+- 期间 GitHub 出现 Partial System Outage（Pages / Git Operations），恢复后构建完成。
