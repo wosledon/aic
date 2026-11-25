@@ -4,6 +4,8 @@
 
 > 企业级大模型网关 Demo：为所有编码 Agent 提供统一出口，按项目归因 Token、治理工具审批，客户端不持有任何上游密钥。
 
+> ⭐ **如果 AIControl 对你有帮助，欢迎[点个 Star](https://github.com/wosledon/aic/stargazers)。** 这会让更多团队发现这个项目，谢谢支持！
+
 [![GitHub stars](https://img.shields.io/github/stars/wosledon/aic?style=flat-square&logo=github)](https://github.com/wosledon/aic/stargazers)
 [![访问量](https://api.visitorbadge.io/api/visitors?path=wosledon%2Faic&label=%E8%AE%BF%E9%97%AE&countColor=%234f6ef7)](https://github.com/wosledon/aic)
 [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-4f6ef7?style=flat-square&logo=githubpages)](https://wosledon.github.io/aic/?lang=zh)
@@ -18,7 +20,8 @@
   <a href="#快速开始"><strong>快速开始</strong></a> ·
   <a href="docs/PRD.md"><strong>PRD</strong></a> ·
   <a href="docs/VERIFICATION.md"><strong>验证记录</strong></a> ·
-  <a href="https://github.com/wosledon/aic"><strong>GitHub</strong></a>
+  <a href="https://github.com/wosledon/aic"><strong>GitHub</strong></a> ·
+  <a href="https://github.com/wosledon/aic/stargazers"><strong>⭐ 点 Star</strong></a>
 </p>
 
 ---

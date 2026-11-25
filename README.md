@@ -4,6 +4,8 @@
 
 > Enterprise LLM gateway demo: one endpoint for every coding agent, with per-project token analytics, approval governance, and zero provider keys on the client.
 
+> ⭐ **If AIControl is useful to you, please [give it a star](https://github.com/wosledon/aic/stargazers).** It helps more teams discover the project — thank you!
+
 [![GitHub stars](https://img.shields.io/github/stars/wosledon/aic?style=flat-square&logo=github)](https://github.com/wosledon/aic/stargazers)
 [![Visitors](https://api.visitorbadge.io/api/visitors?path=wosledon%2Faic&label=Visitors&countColor=%234f6ef7)](https://github.com/wosledon/aic)
 [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-4f6ef7?style=flat-square&logo=githubpages)](https://wosledon.github.io/aic/)
@@ -18,7 +20,8 @@
   <a href="#quick-start"><strong>Quick start</strong></a> ·
   <a href="docs/PRD.md"><strong>PRD</strong></a> ·
   <a href="docs/VERIFICATION.md"><strong>Verification log</strong></a> ·
-  <a href="https://github.com/wosledon/aic"><strong>GitHub</strong></a>
+  <a href="https://github.com/wosledon/aic"><strong>GitHub</strong></a> ·
+  <a href="https://github.com/wosledon/aic/stargazers"><strong>⭐ Star</strong></a>
 </p>
 
 ---
