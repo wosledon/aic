@@ -41,33 +41,33 @@ AIControl 是面向工程团队的自托管 **LLM 网关与 AI 使用审计平�
 
 ## 功能概览
 
-| 能力 | 说明 |
-| --- | --- |
-| **唯一模型出口** | OpenAI Chat Completions / Responses、Anthropic Messages、Google Generative AI 原协议代理 |
+| 能力                  | 说明                                                                                     |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| **唯一模型出口**      | OpenAI Chat Completions / Responses、Anthropic Messages、Google Generative AI 原协议代理 |
 | **供应商 + 模型目录** | 从 [models.dev](https://models.dev) 导入供应商与模型，公共模型直连一个上游通道，无路由表 |
-| **飞书 SSO + 设备码** | 控制台 SSO 与 CLI 设备码共用同一飞书应用；本地 Demo 提供开发登录 |
-| **Token 计量** | 解析上游 usage 的输入 / 输出 / 缓存读写 Token，异步入库 |
-| **项目自动上报** | 插件上报项目 key、名称与 Git 仓库，平台首次见到即自动建档并记录成员 |
-| **审批治理** | 插件侧风险分类与审批门禁，按用户 / 项目 / 工具统计批准、拒绝、策略拒绝与自动允许 |
-| **配额与策略** | 用户 / 项目日 / 月配额、模型白名单、审批规则、速率策略 |
-| **密钥安全** | AES-GCM 静态加密、只写不读、列表仅返回掩码；默认不采集 Prompt / 代码 / 命令原文 |
+| **飞书 SSO + 设备码** | 控制台 SSO 与 CLI 设备码共用同一飞书应用；本地 Demo 提供开发登录                         |
+| **Token 计量**        | 解析上游 usage 的输入 / 输出 / 缓存读写 Token，异步入库                                  |
+| **项目自动上报**      | 插件上报项目 key、名称与 Git 仓库，平台首次见到即自动建档并记录成员                      |
+| **审批治理**          | 插件侧风险分类与审批门禁，按用户 / 项目 / 工具统计批准、拒绝、策略拒绝与自动允许         |
+| **配额与策略**        | 用户 / 项目日 / 月配额、模型白名单、审批规则、速率策略                                   |
+| **密钥安全**          | AES-GCM 静态加密、只写不读、列表仅返回掩码；默认不采集 Prompt / 代码 / 命令原文          |
 
 ## 页面截图
 
-| 概览 | 用量分析 |
-| --- | --- |
+| 概览                                    | 用量分析                            |
+| --------------------------------------- | ----------------------------------- |
 | ![概览](docs/screenshots/dashboard.png) | ![用量](docs/screenshots/usage.png) |
 
-| 项目用量 | 审批治理 |
-| --- | --- |
+| 项目用量                               | 审批治理                                |
+| -------------------------------------- | --------------------------------------- |
 | ![项目](docs/screenshots/projects.png) | ![审批](docs/screenshots/approvals.png) |
 
-| 供应商与模型 | 会话明细 |
-| --- | --- |
+| 供应商与模型                         | 会话明细                               |
+| ------------------------------------ | -------------------------------------- |
 | ![模型](docs/screenshots/models.png) | ![会话](docs/screenshots/sessions.png) |
 
-| 系统设置 | 登录 |
-| --- | --- |
+| 系统设置                               | 登录                                |
+| -------------------------------------- | ----------------------------------- |
 | ![设置](docs/screenshots/settings.png) | ![登录](docs/screenshots/login.png) |
 
 ## 架构
@@ -158,26 +158,26 @@ aic-copilot             # 或 aic-codex / aic-claude
 
 ## 支持的客户端
 
-| 客户端 | 命令 | 接入方式 |
-| --- | --- | --- |
-| **Pi coding agent** | `pi` | Pi 扩展（`pi.extensions`）、Provider 注册、审批钩子 |
-| **Codex CLI** | `aic-codex` | 注入 Codex profile（网关 Base URL 与归因头） |
-| **Claude Code** | `aic-claude` | 注入 `ANTHROPIC_BASE_URL` / Token 与审批钩子 |
+| 客户端                 | 命令          | 接入方式                                                |
+| ---------------------- | ------------- | ------------------------------------------------------- |
+| **Pi coding agent**    | `pi`          | Pi 扩展（`pi.extensions`）、Provider 注册、审批钩子     |
+| **Codex CLI**          | `aic-codex`   | 注入 Codex profile（网关 Base URL 与归因头）            |
+| **Claude Code**        | `aic-claude`  | 注入 `ANTHROPIC_BASE_URL` / Token 与审批钩子            |
 | **GitHub Copilot CLI** | `aic-copilot` | `COPILOT_PROVIDER_*` BYOK，每条请求刷新令牌并注入归因头 |
 
 ## 配置项
 
-| 环境变量 | 用途 |
-| --- | --- |
-| `AIC_PUBLIC_BASE_URL` | 网关对外地址（默认 `http://localhost:5080`） |
-| `AIC_DB_CONNECTION` | SQLite 连接串或路径 |
-| `AIC_ENCRYPTION_KEY` | 渠道 / 飞书密钥的 AES-GCM 密钥，**非 Development 必填** |
-| `AIC_TOKEN_SIGNING_KEY` | JWT 签名密钥，**非 Development 必填** |
-| `AIC_DEV_LOGIN_ENABLED` | 是否启用演示登录（默认 `false`，Development 配置为 `true`） |
-| `AIC_SEED_DEMO` | 是否初始化演示数据 |
-| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | 初始管理员 union_id（逗号分隔） |
-| `AIC_HOME` | CLI 配置目录（默认 `~/.aic`） |
-| `AIC_PROJECT` | 覆盖当前上报的项目 key |
+| 环境变量                        | 用途                                                        |
+| ------------------------------- | ----------------------------------------------------------- |
+| `AIC_PUBLIC_BASE_URL`           | 网关对外地址（默认 `http://localhost:5080`）                |
+| `AIC_DB_CONNECTION`             | SQLite 连接串或路径                                         |
+| `AIC_ENCRYPTION_KEY`            | 渠道 / 飞书密钥的 AES-GCM 密钥，**非 Development 必填**     |
+| `AIC_TOKEN_SIGNING_KEY`         | JWT 签名密钥，**非 Development 必填**                       |
+| `AIC_DEV_LOGIN_ENABLED`         | 是否启用演示登录（默认 `false`，Development 配置为 `true`） |
+| `AIC_SEED_DEMO`                 | 是否初始化演示数据                                          |
+| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | 初始管理员 union_id（逗号分隔）                             |
+| `AIC_HOME`                      | CLI 配置目录（默认 `~/.aic`）                               |
+| `AIC_PROJECT`                   | 覆盖当前上报的项目 key                                      |
 
 飞书 App Secret、供应商 API Key 在控制台录入并加密存储。不要提交 `.env`、`appsettings.Development.json`、`*.db`、`wwwroot/` 或 `~/.aic`。
 

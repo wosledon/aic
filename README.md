@@ -41,33 +41,33 @@ AIControl is a self-hosted **LLM gateway and AI usage audit platform** for engin
 
 ## Features
 
-| Capability | What it does |
-| --- | --- |
-| **Single model egress** | OpenAI Chat Completions / Responses, Anthropic Messages, and Google Generative AI are proxied without protocol rewriting |
-| **Provider + model catalog** | Import providers and models from [models.dev](https://models.dev), bind a public model to exactly one upstream channel — no routing tables |
-| **Feishu SSO + device flow** | Console SSO and CLI device-code login share one Feishu app; a dev login is available for local demos |
-| **Token analytics** | Input, output, cache-read, and cache-write tokens are parsed from upstream usage and stored asynchronously |
-| **Automatic project attribution** | Plugins report project key, name, and Git repository; projects and memberships are created on first sight |
-| **Approval governance** | Risk classification and approval gates in the plugin; approvals, denials, policy denials, and auto-allows are aggregated per user/project/tool |
-| **Quotas & policies** | Daily/monthly user and project quotas, model allowlists, approval rules, and rate-limit policies |
-| **Secret hygiene** | AES-GCM at rest, write-only secrets, masked list responses, no prompt/code/command capture by default |
+| Capability                        | What it does                                                                                                                                   |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Single model egress**           | OpenAI Chat Completions / Responses, Anthropic Messages, and Google Generative AI are proxied without protocol rewriting                       |
+| **Provider + model catalog**      | Import providers and models from [models.dev](https://models.dev), bind a public model to exactly one upstream channel — no routing tables     |
+| **Feishu SSO + device flow**      | Console SSO and CLI device-code login share one Feishu app; a dev login is available for local demos                                           |
+| **Token analytics**               | Input, output, cache-read, and cache-write tokens are parsed from upstream usage and stored asynchronously                                     |
+| **Automatic project attribution** | Plugins report project key, name, and Git repository; projects and memberships are created on first sight                                      |
+| **Approval governance**           | Risk classification and approval gates in the plugin; approvals, denials, policy denials, and auto-allows are aggregated per user/project/tool |
+| **Quotas & policies**             | Daily/monthly user and project quotas, model allowlists, approval rules, and rate-limit policies                                               |
+| **Secret hygiene**                | AES-GCM at rest, write-only secrets, masked list responses, no prompt/code/command capture by default                                          |
 
 ## Screenshots
 
-| Dashboard | Token usage |
-| --- | --- |
+| Dashboard                                    | Token usage                          |
+| -------------------------------------------- | ------------------------------------ |
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Usage](docs/screenshots/usage.png) |
 
-| Projects | Approvals |
-| --- | --- |
+| Projects                                   | Approvals                                    |
+| ------------------------------------------ | -------------------------------------------- |
 | ![Projects](docs/screenshots/projects.png) | ![Approvals](docs/screenshots/approvals.png) |
 
-| Providers & models | Sessions |
-| --- | --- |
+| Providers & models                     | Sessions                                   |
+| -------------------------------------- | ------------------------------------------ |
 | ![Models](docs/screenshots/models.png) | ![Sessions](docs/screenshots/sessions.png) |
 
-| Settings | Login |
-| --- | --- |
+| Settings                                   | Login                                |
+| ------------------------------------------ | ------------------------------------ |
 | ![Settings](docs/screenshots/settings.png) | ![Login](docs/screenshots/login.png) |
 
 > The console UI is currently Simplified Chinese; the README and GitHub Pages site are bilingual.
@@ -160,26 +160,26 @@ aic-copilot             # or: aic-codex / aic-claude
 
 ## Supported clients
 
-| Client | Command | Integration |
-| --- | --- | --- |
-| **Pi coding agent** | `pi` | Pi extension (`pi.extensions`), provider registration, approval hooks |
-| **Codex CLI** | `aic-codex` | Injects a dedicated Codex profile with gateway base URL and headers |
-| **Claude Code** | `aic-claude` | Injects `ANTHROPIC_BASE_URL` / token and approval hooks |
+| Client                 | Command       | Integration                                                                          |
+| ---------------------- | ------------- | ------------------------------------------------------------------------------------ |
+| **Pi coding agent**    | `pi`          | Pi extension (`pi.extensions`), provider registration, approval hooks                |
+| **Codex CLI**          | `aic-codex`   | Injects a dedicated Codex profile with gateway base URL and headers                  |
+| **Claude Code**        | `aic-claude`  | Injects `ANTHROPIC_BASE_URL` / token and approval hooks                              |
 | **GitHub Copilot CLI** | `aic-copilot` | BYOK provider via `COPILOT_PROVIDER_*`, fresh token per request, attribution headers |
 
 ## Configuration
 
-| Environment variable | Purpose |
-| --- | --- |
-| `AIC_PUBLIC_BASE_URL` | Public gateway URL (default `http://localhost:5080`) |
-| `AIC_DB_CONNECTION` | SQLite connection string or path |
-| `AIC_ENCRYPTION_KEY` | AES-GCM key for provider/Feishu secrets — **required in non-Development** |
-| `AIC_TOKEN_SIGNING_KEY` | JWT signing key — **required in non-Development** |
-| `AIC_DEV_LOGIN_ENABLED` | Enable demo login (default `false`, `true` in Development config) |
-| `AIC_SEED_DEMO` | Seed demo data |
-| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | Bootstrap admin union IDs (comma separated) |
-| `AIC_HOME` | CLI state directory (default `~/.aic`) |
-| `AIC_PROJECT` | Override the reported project key |
+| Environment variable            | Purpose                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| `AIC_PUBLIC_BASE_URL`           | Public gateway URL (default `http://localhost:5080`)                      |
+| `AIC_DB_CONNECTION`             | SQLite connection string or path                                          |
+| `AIC_ENCRYPTION_KEY`            | AES-GCM key for provider/Feishu secrets — **required in non-Development** |
+| `AIC_TOKEN_SIGNING_KEY`         | JWT signing key — **required in non-Development**                         |
+| `AIC_DEV_LOGIN_ENABLED`         | Enable demo login (default `false`, `true` in Development config)         |
+| `AIC_SEED_DEMO`                 | Seed demo data                                                            |
+| `AIC_BOOTSTRAP_ADMIN_UNION_IDS` | Bootstrap admin union IDs (comma separated)                               |
+| `AIC_HOME`                      | CLI state directory (default `~/.aic`)                                    |
+| `AIC_PROJECT`                   | Override the reported project key                                         |
 
 Secrets such as Feishu App Secret and provider API keys are entered in the console and encrypted at rest. Never commit `.env`, `appsettings.Development.json`, `*.db`, `wwwroot/`, or `~/.aic`.
 
