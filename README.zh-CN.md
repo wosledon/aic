@@ -35,6 +35,10 @@ AIControl 用「统一身份 + 统一埋点」补上这段空白，同时不限�
 - **给人一个身份，而不是共享一把密钥。** 控制台 SSO 与 CLI 设备码签发短期网关令牌，可按人或设备随时撤销。
 - **上游凭据留在服务端。** Base URL 与 API Key 不离开网关，并加密存储。
 
+### AIControl 是什么？
+
+AIControl 是面向工程团队的自托管 **LLM 网关与 AI 使用审计平台**。它把 Pi、Codex CLI、Claude Code、GitHub Copilot CLI 以及任意 OpenAI / Anthropic / Google 兼容客户端接到同一个受治理入口，将原始 Token 消耗转化为按用户、项目、会话与工具的记录，并提供统一身份、加密上游密钥与审批遥测。
+
 ## 功能概览
 
 | 能力 | 说明 |

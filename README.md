@@ -35,6 +35,10 @@ AIControl closes that gap without standardizing on one client:
 - **Give people an identity, not a shared key.** Console SSO and CLI device-code login issue short-lived gateway tokens that can be revoked per person or device.
 - **Keep provider credentials server-side.** Upstream base URLs and API keys never leave the gateway and are encrypted at rest.
 
+### What is AIControl?
+
+AIControl is a self-hosted **LLM gateway and AI usage audit platform** for engineering teams. It connects Pi, Codex CLI, Claude Code, GitHub Copilot CLI and any OpenAI-, Anthropic- or Google-compatible client to one governed endpoint, then turns raw token consumption into per-user, per-project, per-session and per-tool records — with unified identity, encrypted provider keys and approval telemetry.
+
 ## Features
 
 | Capability | What it does |

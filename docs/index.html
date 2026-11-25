@@ -4,14 +4,49 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AIControl — Enterprise LLM Gateway</title>
-  <meta name="description" content="One governed gateway for Pi, Codex CLI, Claude Code and GitHub Copilot CLI: per-project token analytics, approval governance and zero provider keys on the client." />
+  <meta name="description" content="AIControl is an enterprise LLM gateway and AI usage audit platform for Pi, Codex CLI, Claude Code and GitHub Copilot CLI — unified identity, per-project token attribution and approval telemetry without locking teams into one tool." />
+  <meta name="keywords" content="LLM gateway, AI gateway, AI usage audit, token attribution, AI governance, Copilot CLI, Codex CLI, Claude Code, Pi coding agent, Feishu SSO, .NET, React, MUI" />
+  <meta name="author" content="AIControl" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+  <meta name="theme-color" content="#060a14" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AIControl" />
   <meta property="og:title" content="AIControl — Enterprise LLM Gateway" />
-  <meta property="og:description" content="One governed gateway for every coding agent. Token analytics, approvals, quotas and encrypted provider keys." />
+  <meta property="og:description" content="Auditable enterprise AI usage for any coding agent: unified identity, per-project attribution and approval telemetry on top of the tools your team already uses." />
   <meta property="og:image" content="https://wosledon.github.io/aic/docs/screenshots/dashboard-light.png" />
+  <meta property="og:url" content="https://wosledon.github.io/aic/docs/" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="zh_CN" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AIControl — Enterprise LLM Gateway" />
+  <meta name="twitter:description" content="Auditable enterprise AI usage for any coding agent — unified identity, per-project attribution and approval telemetry." />
+  <meta name="twitter:image" content="https://wosledon.github.io/aic/docs/screenshots/dashboard-light.png" />
   <link rel="canonical" href="https://wosledon.github.io/aic/docs/" />
   <link rel="alternate" hreflang="en" href="https://wosledon.github.io/aic/docs/?lang=en" />
   <link rel="alternate" hreflang="zh-CN" href="https://wosledon.github.io/aic/docs/?lang=zh" />
+  <link rel="alternate" hreflang="x-default" href="https://wosledon.github.io/aic/docs/" />
+  <link rel="sitemap" type="application/xml" href="https://wosledon.github.io/aic/sitemap.xml" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%234f6ef7'/%3E%3Ctext x='32' y='42' font-size='26' font-family='sans-serif' font-weight='700' fill='white' text-anchor='middle'%3EAIC%3C/text%3E%3C/svg%3E" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "AIControl",
+      "alternateName": "AIControl LLM Gateway",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "AI governance and observability",
+      "operatingSystem": "Windows, Linux, macOS",
+      "description": "Enterprise LLM gateway and AI usage audit platform for coding agents. Adds unified identity, per-project token attribution and approval telemetry on top of Pi, Codex CLI, Claude Code and GitHub Copilot CLI.",
+      "url": "https://wosledon.github.io/aic/docs/",
+      "codeRepository": "https://github.com/wosledon/aic",
+      "sameAs": ["https://github.com/wosledon/aic"],
+      "author": { "@type": "Person", "email": "powertle@outlook.com" },
+      "isAccessibleForFree": true,
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "keywords": "LLM gateway, AI gateway, AI usage audit, token attribution, AI governance, GitHub Copilot CLI, Codex CLI, Claude Code, Pi coding agent, Feishu SSO",
+      "inLanguage": ["en", "zh-CN"]
+    }
+  </script>
   <style>
     :root {
       --bg: #060a14;
@@ -270,7 +305,7 @@
         </a>
       </div>
       <div class="hero-shot">
-        <img src="./screenshots/dashboard-light.png" alt="AIControl dashboard" />
+        <img src="./screenshots/dashboard-light.png" alt="AIControl dashboard showing token trends, request counts and approval rate" width="1440" height="900" fetchpriority="high" decoding="async" />
       </div>
     </section>
 
@@ -444,6 +479,7 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
     const dict = {
       en: {
         "meta.title": "AIControl — Enterprise LLM Gateway",
+        "meta.description": "AIControl is an enterprise LLM gateway and AI usage audit platform for Pi, Codex CLI, Claude Code and GitHub Copilot CLI — unified identity, per-project token attribution and approval telemetry without locking teams into one tool.",
         "brand.sub": "Enterprise LLM Gateway",
         "nav.features": "Features",
         "nav.why": "Why",
@@ -518,6 +554,7 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
       },
       zh: {
         "meta.title": "AIControl — 企业级大模型网关",
+        "meta.description": "AIControl 是面向企业的 LLM 网关与 AI 使用审计平台：在不限制团队工具选择的前提下，为 Pi、Codex CLI、Claude Code、GitHub Copilot CLI 补上统一身份、按项目 Token 归因与审批遥测。",
         "brand.sub": "企业级大模型网关",
         "nav.features": "功能",
         "nav.why": "为什么",
@@ -601,6 +638,16 @@ aic-copilot   # or aic-codex / aic-claude</pre></div>
       const t = dict[lang];
       document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
       document.title = t["meta.title"];
+      const setMeta = (selector, value) => {
+        const el = document.querySelector(selector);
+        if (el) el.setAttribute("content", value);
+      };
+      setMeta('meta[name="description"]', t["meta.description"]);
+      setMeta('meta[property="og:title"]', t["meta.title"]);
+      setMeta('meta[property="og:description"]', t["meta.description"]);
+      setMeta('meta[name="twitter:title"]', t["meta.title"]);
+      setMeta('meta[name="twitter:description"]', t["meta.description"]);
+      setMeta('meta[property="og:locale"]', lang === "zh" ? "zh_CN" : "en_US");
       document.querySelectorAll("[data-i18n]").forEach((el) => {
         const value = t[el.dataset.i18n];
         if (value !== undefined) el.innerHTML = value;
