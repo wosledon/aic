@@ -162,3 +162,23 @@ Step 连接已从备份恢复为 `阶跃`（provider `stepfun`，Base URL `https
 - `git check-ignore -v` 命中 `.gitignore` 对应规则；
 - `appsettings.json` 已移除演示加密 / JWT 密钥，Development 密钥放入被忽略的 `appsettings.Development.json`；
 - 非 Development 环境缺少 `AIC_ENCRYPTION_KEY` / `AIC_TOKEN_SIGNING_KEY` 时启动失败。
+## GitHub Copilot CLI 接入验证（2026-11-25 23:52）
+
+环境：Copilot CLI `1.0.114`，插件全局安装到 `%APPDATA%\npm`（`aic` / `aic-copilot` / `aic-codex` / `aic-claude`）。
+
+修复：
+
+- Copilot CLI 的 `openai` Provider 会忽略静态 `COPILOT_PROVIDER_API_KEY` 并带上自己的 GitHub 凭据，导致网关 401；改为 `COPILOT_PROVIDER_API_KEY_COMMAND=aic print-token`，每条请求自动刷新令牌；
+- Windows 下 `spawn(..., { shell: true })` 不转义参数，带空格的 `-p "..."` 会被拆成多个参数；改为 `cmd /d /s /c` + `windowsVerbatimArguments` 并自行加引号；
+- Copilot 不转发进程环境变量，改用 `COPILOT_PROVIDER_HEADERS` 注入 `X-AIC-Project / Session / Device / Client`，否则用量会进入未归因；
+- 新增 `aic model set <alias>` 记住默认模型、未登录时自动发起设备码登录；`providers.json` 不支持 `apiKeyCommand`，静态令牌会 15 分钟过期，因此不作为默认方案。
+
+验证：
+
+| 检查                                                | 结果                                                                    |
+| --------------------------------------------------- | ----------------------------------------------------------------------- |
+| `aic-copilot --version`                             | 启动 Copilot CLI 1.0.114，提示注入 BYOK 变量                            |
+| 默认模型（mock DeepSeek）                           | 返回内置模拟上游回复                                                    |
+| `aic model set step-3.7-flash` 后直接 `aic-copilot` | 返回「成功」，无需 `--model`                                            |
+| 用量归因                                            | 项目 `aic` 下 `step-3.7-flash` 累计 6 次 / 97,012 Token                 |
+| 会话                                                | `client=copilot-cli`、`project_key=aic`、`repo=github.com/wosledon/aic` |

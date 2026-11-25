@@ -146,19 +146,29 @@ aic-claude --model claude-sonnet-5-5
 
 ```powershell
 aic login
+# 可选：记住默认模型，之后不再需要 --model
+aic model set step-3.7-flash
 aic-copilot
 ```
+
+`aic-copilot` 首次运行若未登录会自动发起设备码登录；令牌通过 `COPILOT_PROVIDER_API_KEY_COMMAND=aic print-token` 每条请求自动刷新，长会话不会中途 401。
 
 注入：
 
 ```text
 COPILOT_PROVIDER_TYPE=openai
 COPILOT_PROVIDER_BASE_URL=<gateway>/gw/openai/v1
-COPILOT_PROVIDER_API_KEY=<短期网关令牌>
+COPILOT_PROVIDER_BEARER_TOKEN=<短期网关令牌>
 COPILOT_MODEL=<公共模型别名>
 ```
 
 需要 Copilot CLI 支持 BYOK 自定义 Provider；老版本不支持时会回退到 GitHub 托管模型。令牌 15 分钟过期，推荐始终通过 `aic-copilot` 启动。
+
+> Copilot CLI 的 `openai` 类型下 `COPILOT_PROVIDER_API_KEY` 不会被当作 `Authorization` 使用（会带上 GitHub 自己的凭据并返回 401），必须使用 `COPILOT_PROVIDER_API_KEY_COMMAND`；`aic-copilot` 已自动注入。
+>
+> `aic-copilot` 还会通过 `COPILOT_PROVIDER_HEADERS` 注入 `X-AIC-Project / X-AIC-Session / X-AIC-Device / X-AIC-Client`，因此 Copilot 的 Token 用量同样按项目归因；不带这些头的 Provider 请求会进入「未归因」。
+>
+> Copilot 新版支持的 `providers.json` 只接受静态 `apiKey` / `bearerToken`，不支持 `apiKeyCommand`；AIC 网关令牌 15 分钟过期，写进文件会在会话中途失效，因此默认仍使用环境变量命令模式。
 
 ## 遥测与隐私
 

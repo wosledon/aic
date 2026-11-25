@@ -112,10 +112,13 @@ aic login --gateway http://localhost:5080
 # 2) 查看账号可用模型
 aic models
 
-# 3) 选择项目（写入当前仓库 .pi/aic.json；--global 写入全局配置）
+# 3) 可选：记住默认模型（Copilot / Codex / Claude 都不再需要 --model）
+aic model set step-3.7-flash
+
+# 4) 选择项目（写入当前仓库 .pi/aic.json；--global 写入全局配置）
 aic project set payments-api
 
-# 4) 查看状态 / 用量 / 诊断
+# 5) 查看状态 / 用量 / 诊断
 aic status
 aic usage
 aic doctor

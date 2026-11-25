@@ -241,6 +241,17 @@ builder.Services.AddAuthentication(options =>
                 context.HandleResponse();
                 var code = context.HttpContext.Items["aic_auth_error"] as string
                     ?? (context.AuthenticateFailure is SecurityTokenExpiredException ? "token_expired" : "invalid_token");
+                var authorization = context.HttpContext.Request.Headers.Authorization.ToString();
+                context.HttpContext.RequestServices.GetRequiredService<ILoggerFactory>()
+                    .CreateLogger("GatewayAuth")
+                    .LogWarning(
+                        "Gateway auth challenge: code={Code} path={Path} has_bearer={HasBearer} auth_length={Length} has_api_key={HasApiKey} has_goog_key={HasGoogleKey}",
+                        code,
+                        context.HttpContext.Request.Path.Value,
+                        authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase),
+                        authorization.Length,
+                        context.HttpContext.Request.Headers.ContainsKey("x-api-key"),
+                        context.HttpContext.Request.Headers.ContainsKey("x-goog-api-key"));
                 var message = code switch
                 {
                     "user_disabled" => "用户已停用，请联系管理员。",

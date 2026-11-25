@@ -1,5 +1,5 @@
-import { spawn, type SpawnOptions } from 'node:child_process';
-import { getAccessToken, fetchBootstrap, getCredentialSummary } from '../auth.js';
+import { spawn } from 'node:child_process';
+import { getAccessToken, fetchBootstrap, getCredentialSummary, login } from '../auth.js';
 import { resolveProject } from '../project.js';
 import { loadConfig, debugLog } from '../store.js';
 import { randomId } from '../http.js';
@@ -52,7 +52,11 @@ export function selectModel(bootstrap: Bootstrap, requested: string | null, allo
 export async function prepareLaunch(client: 'codex' | 'claude-code' | 'copilot-cli', cwd = process.cwd()): Promise<LaunchContext> {
   const summary = getCredentialSummary();
   if (!summary.loggedIn) {
-    throw new Error('尚未登录。请先执行 aic login。');
+    if (!process.stdin.isTTY) {
+      throw new Error('尚未登录。请先执行 aic login。');
+    }
+    console.log('尚未登录 AIControl，正在发起设备码登录…');
+    await login();
   }
   const config = loadConfig();
   const bootstrap = await fetchBootstrap({ ttlSeconds: 300 });
@@ -79,6 +83,13 @@ export interface SpawnTrackedOptions {
   model: BootstrapModel;
 }
 
+/** Windows 下 shell 启动时按 cmd 规则给参数加引号，避免含空格的 prompt 被拆成多个参数。 */
+function quoteWindowsArgument(value: string): string {
+  if (value === '') return '""';
+  if (!/[\s"&|<>^()%!]/.test(value)) return value;
+  return '"' + value.replace(/(["\\])/g, '\\$1') + '"';
+}
+
 export function spawnTracked(options: SpawnTrackedOptions): Promise<number> {
   const { context, model, client, command, args, env } = options;
   recordSessionStarted({
@@ -93,20 +104,29 @@ export function spawnTracked(options: SpawnTrackedOptions): Promise<number> {
   });
   debugLog(`launch ${client}: command=${command} model=${model.id} project=${context.project.key ?? 'unattributed'}`);
 
-  const spawnOptions: SpawnOptions = {
-    stdio: 'inherit',
-    env: {
-      ...process.env,
-      ...env,
-      AIC_SESSION_ID: context.sessionId,
-      AIC_DEVICE_ID: loadConfig().device_id,
-      ...(context.project.key ? { AIC_PROJECT: context.project.key } : {}),
-    },
-    shell: process.platform === 'win32',
+  const childEnv: NodeJS.ProcessEnv = {
+    ...process.env,
+    ...env,
+    AIC_SESSION_ID: context.sessionId,
+    AIC_DEVICE_ID: loadConfig().device_id,
+    ...(context.project.key ? { AIC_PROJECT: context.project.key } : {}),
   };
 
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, spawnOptions);
+    // Windows 的 copilot/codex/claude 多为 .cmd 包装脚本，必须经 cmd.exe 启动；
+    // 这里显式拼接命令行并自行加引号，避免 Node 的 shell:true 把带空格参数拆开。
+    const child =
+      process.platform === 'win32'
+        ? spawn(
+            process.env.ComSpec ?? 'cmd.exe',
+            ['/d', '/s', '/c', `"${[command, ...args.map(quoteWindowsArgument)].join(' ')}"`],
+            {
+              stdio: 'inherit',
+              env: childEnv,
+              windowsVerbatimArguments: true,
+            },
+          )
+        : spawn(command, args, { stdio: 'inherit', env: childEnv });
     child.on('error', (error) => {
       reject(new Error(`无法启动 ${command}：${error.message}。请确认已安装并位于 PATH 中。`));
     });

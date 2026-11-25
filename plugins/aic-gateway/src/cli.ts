@@ -21,6 +21,7 @@ function help(): void {
   aic logout
   aic status
   aic models [--json]
+  aic model <show|set <alias>|clear>
   aic project <show|list|set <key>|clear> [--global]
   aic usage [--json]
   aic doctor [--json]
@@ -98,6 +99,30 @@ async function commandModels(json: boolean): Promise<void> {
     console.log(`${model.id.padEnd(32)} ${model.api.padEnd(22)} ctx=${model.context_window}${reasoning}`);
     console.log(`  ${model.display_name} · ${model.base_url}`);
   }
+}
+
+async function commandModel(action: string, alias: string | undefined): Promise<void> {
+  const config = loadConfig();
+  if (action === 'show' || !action) {
+    console.log(`默认模型：${config.default_model ?? '未设置（自动选择首个兼容模型）'}`);
+    return;
+  }
+  if (action === 'clear') {
+    updateConfig({ default_model: null });
+    console.log('已清除默认模型，恢复自动选择。');
+    return;
+  }
+  if (action === 'set') {
+    if (!alias) throw new Error('用法：aic model set <alias>');
+    const bootstrap = await fetchBootstrap({ ttlSeconds: 300 });
+    if (!bootstrap.models.some((model) => model.id === alias)) {
+      throw new Error(`模型 ${alias} 不在当前账号可用目录中。执行 aic models 查看可用模型。`);
+    }
+    updateConfig({ default_model: alias });
+    console.log(`默认模型已设为 ${alias}；之后 aic-copilot / aic-codex / aic-claude 无需再传 --model。`);
+    return;
+  }
+  throw new Error('用法：aic model <show|set <alias>|clear>');
 }
 
 async function commandProject(action: string, key: string | undefined, global: boolean): Promise<void> {
@@ -275,6 +300,9 @@ export async function main(argv: string[]): Promise<number> {
         return 0;
       case 'models':
         await commandModels(flags.json === true);
+        return 0;
+      case 'model':
+        await commandModel(positional[0] ?? 'show', positional[1]);
         return 0;
       case 'project':
         await commandProject(positional[0] ?? 'show', positional[1], flags.global === true);
